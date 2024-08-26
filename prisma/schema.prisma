@@ -10,6 +10,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model users {
+  id        String   @id @default(uuid())
+  employID  String  @unique
+  password  String?
+  createdAt DateTime @default(now())
+}
+
 model carros {
   id        String   @id @default(uuid())
   numSerie String   @unique
@@ -17,7 +24,6 @@ model carros {
   ReportadoPor String?
   createdAt  DateTime @default(now())
   descripcion String
-  Lugar String
-    
+  Lugar String  
 }
 

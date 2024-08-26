@@ -10,13 +10,15 @@ interface FormValues {
   description: string;
 }
 
-const colorOptions = ['Negro', 'Gris', 'Blanco', 'Azul', 'Rojo', "NA"];
+const colorOptions = ['Negro', 'Gris', 'Blanco', 'Azul', 'Rojo','NA'];
 
 const validationSchema = Yup.object({
-  serialNumber: Yup.string().required('Serial number is required'),
-  color: Yup.string().required('Color is required'),
-  reporter: Yup.string().required('Reporter name is required'),
-  description: Yup.string().max(15, `Maximum ${15} characters allowed`).required('Description is required')
+  serialNumber: Yup.string().required('Numero de serie es requerido'),
+  color: Yup.string().required('Color es requerido'),
+  reporter: Yup.string().required('Se requiere nombre del quien reporta'),
+  description: Yup.string().max(50, `Maximo ${50} caracteres permitido`)
+    .required('Descripcion es requerida')
+    .min(10,`Minimo ${10} caracteres`)
 });
 
 export default function MyForm () {
@@ -29,7 +31,7 @@ export default function MyForm () {
     },
     validationSchema,
     onSubmit: (values) => {
-      alert( values);
+      console.log(values)
     },
   });
 
@@ -56,9 +58,9 @@ export default function MyForm () {
 
       <div className="mb-4">
         <label className="block text-md font-bold">Color</label>
-        <div className="flex space-x-4 mt-2">
+        <div className="flex flex-wrap gap-3 ">
           {colorOptions.map((color) => (
-            <label key={color} className="flex items-center space-x-2">
+            <label key={color} className="flex py-1 space-x-2">
               <input
                 type="radio"
                 name="color"
@@ -114,13 +116,13 @@ export default function MyForm () {
           <div className="text-red-600 text-sm mt-1">{formik.errors.description}</div>
         ) : null}
       </div>
-
       <button
         type="submit"
-        className="w-full py-2 px-4 bg-rose-600 text-white font-medium rounded-md hover:bg-rose-800"
+        className="w-full py-2 mb-4 px-4 bg-rose-600 text-white font-medium rounded-md hover:bg-rose-700"
       >
         Submit
       </button>
+      <a href="/" className='flex w-full items-center justify-center py-2 px-4  border-2 border-black border-opacity-30 bg-white hover:bg-rose-600 text-black hover:text-white font-medium rounded-md transition-all duration-300'>Cancel</a>
     </form>
   );
 };
