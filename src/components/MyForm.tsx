@@ -48,8 +48,16 @@ export default function MyForm() {
       Notes: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values) => {
+      const response = await fetch("/api/form",{
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+      const data = await response.json();
+      console.log(data);
     },
   });
 
@@ -219,7 +227,7 @@ export default function MyForm() {
           Submit
         </button>
         <a
-          href="/"
+          href="/dashboard"
           className="flex w-full items-center justify-center py-2 px-4  border-2 border-black border-opacity-30 bg-white hover:bg-rose-600 text-black hover:text-white font-medium rounded-md transition-all duration-300"
         >
           Cancel

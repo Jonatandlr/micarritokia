@@ -1,10 +1,13 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/libs/prisma";
+import { NextAuthOptions } from "next-auth";
 
-const handler = NextAuth({
-  // Configure one or more authentication providers
-  providers: [
+
+
+export const authOptions:NextAuthOptions={
+   // Configure one or more authentication providers
+   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. 'Sign in with...')
       name: "Credentials",
@@ -39,7 +42,7 @@ const handler = NextAuth({
         
         return {
           id: userFound.id,
-          idEmployee: userFound.employID,
+          name: userFound.employID,
         };
       },
     }),
@@ -49,6 +52,9 @@ const handler = NextAuth({
   pages: {
     signIn: "/login",
   },
-});
+  
+}
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
