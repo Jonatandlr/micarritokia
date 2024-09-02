@@ -15,15 +15,23 @@ model users {
   employID  String  @unique
   password  String?
   createdAt DateTime @default(now())
+  carros carros[]
 }
 
 model carros {
   id        String   @id @default(uuid())
-  numSerie String   @unique
-  color    String?
-  ReportadoPor String?
-  createdAt  DateTime @default(now())
-  descripcion String
-  Lugar String  
+  Model String
+  VIN String   @unique
+  Color    String
+  DetectedBy String
+  ReportedDate  DateTime @default(now())
+  Issue String
+  AreaResponsible  String  
+  requestor String
+  Notes String
+  Status String
+  Ubicacion String
+  // Define la relación con el modelo users
+  user        users    @relation(fields: [DetectedBy], references: [employID])
 }
 

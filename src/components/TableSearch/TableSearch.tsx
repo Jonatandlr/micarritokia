@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MaxWithWrapper from "../MaxWidthWrapper";
 import {
   useReactTable,
@@ -17,13 +17,14 @@ type Reporte = {
   Model: string;
   VIN: string;
   Color: string | null;
-  DetectBy: string;
-  FechaDeReporte: string;
-  LineOutDate: string;
-  Problem: string | null;
-  AreaProblem: string | null;
-  Solicitante: string;
+  DetectedBy: string;
+  ReportedDate: string;
+  // LineOutDate: string;
+  Issue: string | null;
+  AreaResponsible: string | null;
+  requestor: string;
   Ubicacion: string | null;
+  Status: string;
   Notes: string | null;
 };
 const columnHelper = createColumnHelper<Reporte>();
@@ -38,37 +39,46 @@ const columns = [
   columnHelper.accessor("Color", {
     header: "Color",
   }),
-  columnHelper.accessor("DetectBy", {
+  columnHelper.accessor("DetectedBy", {
     header: "Detectado por",
   }),
-  columnHelper.accessor("FechaDeReporte", {
+  columnHelper.accessor("ReportedDate", {
     header: "Fecha de reporte",
   }),
-  columnHelper.accessor("LineOutDate", {
-    header: "Fecha de salida",
-  }),
-  columnHelper.accessor("Problem", {
+  // columnHelper.accessor("LineOutDate", {
+  //   header: "Fecha de salida",
+  // }),
+  columnHelper.accessor("Issue", {
     header: "Problema",
   }),
-  columnHelper.accessor("AreaProblem", {
+  columnHelper.accessor("AreaResponsible", {
     header: "Área del problema",
   }),
-  columnHelper.accessor("Solicitante", {
+  columnHelper.accessor("requestor", {
     header: "Solicitante",
   }),
   columnHelper.accessor("Ubicacion", {
     header: "Ubicación",
+  }),
+  columnHelper.accessor("Status", {
+    header: "Status",
   }),
   columnHelper.accessor("Notes", {
     header: "Notas",
   }),
 ];
 
-export default function TableSearch() {
-  const [data, setData] = useState<Reporte[]>(defectos);
+export default function TableSearch({ defects }: { defects: Reporte[] }) {
+  
+  const [data, setData] = useState(defects);
   const [sorting, setSorting] = useState([]);
   const [search, setSearch] = useState("");
 
+
+  useEffect(() => {
+    setData(defects);
+  }, [defects]);
+  
   const table = useReactTable({
     columns,
     data,
@@ -119,9 +129,9 @@ export default function TableSearch() {
             <h1 className="text-2xl font-bold">Tabla de defectos</h1>
           </div>
           <div className="group">
-            <Link href="/dashboard/reporte"
+            <Link
+              href="/dashboard/reporte"
               className="bg-primary px-4 py-1 rounded-lg text-white flex justify-center items-center gap-2 group-hover:bg-white transition-all duration-300 group-hover:text-primary group-hover:border-primary border-2 border-primary"
-            
             >
               <span>
                 <svg
@@ -142,131 +152,141 @@ export default function TableSearch() {
           </div>
         </div>
       </div>
-      <table>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((column) => {
-                return (
-                  <th
-                    key={column.id}
-                    className="border-2 border-primary"
-                    onClick={column.column.getToggleSortingHandler()}
-                  >
-                    <div className="flex flex-row px-3 font-semibold text-[14px]  justify-between items-center gap-2">
-                      {flexRender(
-                        column.column.columnDef.header,
-                        column.getContext()
-                      )}
-                      {{
-                        asc: (
-                          <svg
-                            width="20"
-                            height="12"
-                            viewBox="0 0 20 12"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path d="M10 12L0 0L20 0L10 12Z" fill="black" />
-                          </svg>
-                        ),
-                        desc: (
-                          <svg
-                            width="20"
-                            height="12"
-                            viewBox="0 0 20 12"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path d="M10 0L20 12H0L10 0Z" fill="black" />
-                          </svg>
-                        ),
-                      }[column.column.getIsSorted() as string] ?? null}
-                    </div>
-                  </th>
-                );
-              })}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="">
-              {row.getVisibleCells().map((cell) => {
-                return (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                );
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
 
-      <div className="flex items-center gap-2">
-        <button
-          className="border rounded p-1"
-          onClick={() => table.setPageIndex(0)}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {"<<"}
-        </button>
-        <button
-          className="border rounded p-1"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {"<"}
-        </button>
-        <button
-          className="border rounded p-1"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          {">"}
-        </button>
-        <button
-          className="border rounded p-1"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          disabled={!table.getCanNextPage()}
-        >
-          {">>"}
-        </button>
-        <span className="flex items-center gap-1">
-          <div>Page</div>
-          <strong>
-            {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
-          </strong>
-        </span>
-        <span className="flex items-center gap-1">
-          | Go to page:
-          <input
-            type="number"
-            min="1"
-            max={table.getPageCount()}
-            defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              table.setPageIndex(page);
-            }}
-            className="border p-1 rounded w-16"
-          />
-        </span>
-        <select
-          value={table.getState().pagination.pageSize}
-          onChange={(e) => {
-            table.setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-      </div>
+      {data.length === 0 ? (
+        <div className="text-center">No hay datos</div>
+      ) : (
+        <div>
+          <table>
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((column) => {
+                    return (
+                      <th
+                        key={column.id}
+                        className="border-2 border-primary"
+                        onClick={column.column.getToggleSortingHandler()}
+                      >
+                        <div className="flex flex-row px-3 font-semibold text-[14px]  justify-between items-center gap-2">
+                          {flexRender(
+                            column.column.columnDef.header,
+                            column.getContext()
+                          )}
+                          {{
+                            asc: (
+                              <svg
+                                width="20"
+                                height="12"
+                                viewBox="0 0 20 12"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path d="M10 12L0 0L20 0L10 12Z" fill="black" />
+                              </svg>
+                            ),
+                            desc: (
+                              <svg
+                                width="20"
+                                height="12"
+                                viewBox="0 0 20 12"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path d="M10 0L20 12H0L10 0Z" fill="black" />
+                              </svg>
+                            ),
+                          }[column.column.getIsSorted() as string] ?? null}
+                        </div>
+                      </th>
+                    );
+                  })}
+                </tr>
+              ))}
+            </thead>
+            <tbody className="text-[13px] border-2 border-rose-600">
+              {table.getRowModel().rows.map((row,index) => (
+                <tr key={row.id} className={`${index%2==0?" bg-rose-400 text-white":""}`}>
+                  {row.getVisibleCells().map((cell) => {
+                    return (
+                      <td key={cell.id} className="px-2">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="flex items-center gap-2">
+            <button
+              className="border rounded p-1"
+              onClick={() => table.setPageIndex(0)}
+              disabled={!table.getCanPreviousPage()}
+            >
+              {"<<"}
+            </button>
+            <button
+              className="border rounded p-1"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              {"<"}
+            </button>
+            <button
+              className="border rounded p-1"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              {">"}
+            </button>
+            <button
+              className="border rounded p-1"
+              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+              disabled={!table.getCanNextPage()}
+            >
+              {">>"}
+            </button>
+            <span className="flex items-center gap-1">
+              <div>Page</div>
+              <strong>
+                {table.getState().pagination.pageIndex + 1} of{" "}
+                {table.getPageCount()}
+              </strong>
+            </span>
+            <span className="flex items-center gap-1">
+              | Go to page:
+              <input
+                type="number"
+                min="1"
+                max={table.getPageCount()}
+                defaultValue={table.getState().pagination.pageIndex + 1}
+                onChange={(e) => {
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                  table.setPageIndex(page);
+                }}
+                className="border p-1 rounded w-16"
+              />
+            </span>
+            <select
+              value={table.getState().pagination.pageSize}
+              onChange={(e) => {
+                table.setPageSize(Number(e.target.value));
+              }}
+            >
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      )}
     </MaxWithWrapper>
   );
 }

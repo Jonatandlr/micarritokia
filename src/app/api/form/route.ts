@@ -1,15 +1,33 @@
 // api for view form in server
 
 import { NextResponse, NextRequest } from "next/server";
+import { NextApiResponse } from "next";
 import prisma from "@/libs/prisma";
 //conseguir session de usuario
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
 
-export function GET() {
-  return NextResponse.json({
-    message: "Formulario de reporte",
+export async function GET() {
+  const defects = await prisma.carros.findMany({
+    select: {
+      id: true,
+      VIN: true,
+      Model: true,
+      Color: true,
+      DetectedBy: true,
+      Issue: true,
+      AreaResponsible: true,
+      requestor: true,
+      Notes: true,
+      Status: true,
+      Ubicacion: true,
+      ReportedDate: true,
+    },
   });
+  // console.log(defects);
+
+
+  return NextResponse.json({ defects });
 }
 
 export async function POST(req: NextRequest, res: NextResponse) {
@@ -37,6 +55,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const newDefect = await prisma.carros.create({
       data: {
         VIN:data.serialNumber, // VIN único del carro
+        Model: data.model,
         Color: data.color,
         DetectedBy: user.employID, // Este debe coincidir con employID del usuario en la tabla users
         Issue: data.issue,
