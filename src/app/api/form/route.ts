@@ -68,9 +68,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
       },
     });
     // console.log(newDefect)
+    const {id,...rest}=newDefect;
 
     return NextResponse.json({
       message: "Formulario enviado",
+      id
     });
   } catch (error) {
     console.error("Error procesando la solicitud:", error);
