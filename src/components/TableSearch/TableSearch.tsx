@@ -14,6 +14,7 @@ import defectos from "@/libs/MOCK_DATA.json";
 import Link from "next/link";
 
 type Reporte = {
+  id: string;
   Model: string;
   VIN: string;
   Color: string | null;
@@ -30,11 +31,20 @@ type Reporte = {
 const columnHelper = createColumnHelper<Reporte>();
 
 const columns = [
-  columnHelper.accessor("Model", {
-    header: "Modelo",
-  }),
   columnHelper.accessor("VIN", {
     header: "VIN",
+    cell: (cell) => {
+      // console.log(cell.row.original.id);
+      return (
+        <Link href={`http://localhost:3000/dashboard/reporte/${cell.row.original.id}`}
+        className="hover:underline transition-all duration-300 hover:scale-125">
+          {cell.row.original.VIN}
+        </Link>
+      );
+    },
+  }),
+  columnHelper.accessor("Model", {
+    header: "Modelo",
   }),
   columnHelper.accessor("Color", {
     header: "Color",
@@ -69,16 +79,15 @@ const columns = [
 ];
 
 export default function TableSearch({ defects }: { defects: Reporte[] }) {
-  
   const [data, setData] = useState(defects);
   const [sorting, setSorting] = useState([]);
   const [search, setSearch] = useState("");
 
-
   useEffect(() => {
     setData(defects);
+    // console.log(defects);
   }, [defects]);
-  
+
   const table = useReactTable({
     columns,
     data,
@@ -205,11 +214,19 @@ export default function TableSearch({ defects }: { defects: Reporte[] }) {
               ))}
             </thead>
             <tbody className="text-[13px] border-2 border-rose-600">
-              {table.getRowModel().rows.map((row,index) => (
-                <tr key={row.id} className={`${index%2==0?" bg-rose-400 text-white":""}`}>
+              {table.getRowModel().rows.map((row, index) => (
+                <tr
+                  key={row.id}
+                  className={`${
+                    index % 2 == 0 ? " bg-rose-400 text-white" : ""
+                  }`}
+                >
                   {row.getVisibleCells().map((cell) => {
+                    // console.log(cell.column.columnDef.header);
+
+                    // if
                     return (
-                      <td key={cell.id} className="px-2">
+                      <td key={cell.id} className="px-2 ">
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
