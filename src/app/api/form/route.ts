@@ -27,7 +27,7 @@ export async function GET() {
     //   },
     // }
     ();
-  console.log(defects);
+  // console.log(defects);
   if (!defects) {
     return NextResponse.json({ message: "No se encontraron reportes" });
   }

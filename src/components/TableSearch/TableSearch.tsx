@@ -36,7 +36,7 @@ const columns = [
     cell: (cell) => {
       // console.log(cell.row.original.id);
       return (
-        <Link href={`http://localhost:3000/dashboard/reporte/${cell.row.original.id}`}
+        <Link href={`${process.env.NEXT_PUBLIC_URL}/dashboard/reporte/${cell.row.original.id}`}
         className="hover:underline transition-all duration-300 hover:scale-125">
           {cell.row.original.VIN}
         </Link>

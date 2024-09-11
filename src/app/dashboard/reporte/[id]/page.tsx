@@ -18,7 +18,7 @@ export default function page() {
         <div className="flex flex-col pt-10 pb-5">
           <h1 className="font-bold text-primary md:text-4xl text-3xl pb-5">Ficha Reporte</h1>
           <div className="flex justify-between">
-            <Link href={"http://localhost:3000/dashboard"}
+            <Link href={`${process.env.NEXT_PUBLIC_URL}/dashboard`}
            className="bg-primary font-semibold text-base px-2 rounded-md text-white flex items-center gap-1 ">Regresar</Link>
             <button  className="bg-primary font-semibold text-base px-2 rounded-md text-white flex items-center gap-1 ">
               <PenSVG />

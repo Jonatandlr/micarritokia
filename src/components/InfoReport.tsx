@@ -34,7 +34,7 @@ export default function InfoReport({ idReport }: InfoReportProps) {
 
   const fetchData = async () => {
     // console.log(idReport);
-    const res = await fetch(`http://localhost:3000/api/reporte/${idReport}`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/reporte/${idReport}`);
     const data = await res.json();
     // console.log(data);
     // console.log(data.defectReport.ReportedDate);
