@@ -3,7 +3,7 @@ import NavBar from "@/components/NavBar";
 import React, { useEffect, useState } from "react";
 import TableSearch from "@/components/TableSearch/TableSearch";
 
-export default function page() {
+export default function Page() {
   const [defects, setDefects] = useState([]);
 
   useEffect(() => {

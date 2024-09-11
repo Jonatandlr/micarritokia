@@ -3,7 +3,7 @@ import NavBar from "../../../components/NavBar";
 import MyForm from "@/components/MyForm";
 import MaxWithWrapper from "@/components/MaxWidthWrapper";
 
-export default function page() {
+export default function Page() {
   return (
     <div>
       <NavBar title="Reporte de Vehiculo" />

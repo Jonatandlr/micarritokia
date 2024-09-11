@@ -6,7 +6,7 @@ import MaxWithWrapper from "@/components/MaxWidthWrapper";
 import Link from "next/link";
 import InfoReport from "@/components/InfoReport";
 import PenSVG from "@/components/PenSVG";
-export default function page() {
+export default function Page() {
   const params = useParams<{ id: string }>();
   // console.log(params);
 
