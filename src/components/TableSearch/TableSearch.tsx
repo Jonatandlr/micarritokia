@@ -9,6 +9,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   getFilteredRowModel,
+  ColumnSort,
 } from "@tanstack/react-table";
 import defectos from "@/libs/MOCK_DATA.json";
 import Link from "next/link";
@@ -80,7 +81,7 @@ const columns = [
 
 export default function TableSearch({ defects }: { defects: Reporte[] }) {
   const [data, setData] = useState(defects);
-  const [sorting, setSorting] = useState([]);
+  const [sorting, setSorting] = useState<ColumnSort[]>([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
