@@ -39,6 +39,7 @@ export const authOptions:NextAuthOptions={
         if (userFound.password !== credentials.password) {
           throw new Error("Usuario/contraseña incorrectos");
         }
+        // console.log(userFound);
         
         return {
           id: userFound.id,

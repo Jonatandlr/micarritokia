@@ -9,6 +9,7 @@ export async function GET(req: NextRequest) {
             id: id,
         },
     })
+    console.log(defectReport);
     if (!defectReport) {
         return NextResponse.json({ message: "No se encontró el reporte" });
     }

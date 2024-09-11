@@ -8,24 +8,29 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function GET() {
-  const defects = await prisma.carros.findMany({
-    select: {
-      id: true,
-      VIN: true,
-      Model: true,
-      Color: true,
-      DetectedBy: true,
-      Issue: true,
-      AreaResponsible: true,
-      requestor: true,
-      Notes: true,
-      Status: true,
-      Ubicacion: true,
-      ReportedDate: true,
-    },
-  });
-  // console.log(defects);
-
+  const defects = await prisma.carros
+    .findMany
+    //   {
+    //   select: {
+    //     id: true,
+    //     VIN: true,
+    //     Model: true,
+    //     Color: true,
+    //     DetectedBy: true,
+    //     Issue: true,
+    //     AreaResponsible: true,
+    //     requestor: true,
+    //     Notes: true,
+    //     Status: true,
+    //     Ubicacion: true,
+    //     ReportedDate: true,
+    //   },
+    // }
+    ();
+  console.log(defects);
+  if (!defects) {
+    return NextResponse.json({ message: "No se encontraron reportes" });
+  }
 
   return NextResponse.json({ defects });
 }
@@ -54,7 +59,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     // console.log(data);
     const newDefect = await prisma.carros.create({
       data: {
-        VIN:data.serialNumber, // VIN único del carro
+        VIN: data.serialNumber, // VIN único del carro
         Model: data.model,
         Color: data.color,
         DetectedBy: user.employID, // Este debe coincidir con employID del usuario en la tabla users
@@ -64,15 +69,14 @@ export async function POST(req: NextRequest, res: NextResponse) {
         Notes: data.Notes,
         Status: "Pendiente",
         Ubicacion: "NA",
-
       },
     });
     // console.log(newDefect)
-    const {id,...rest}=newDefect;
+    const { id, ...rest } = newDefect;
 
     return NextResponse.json({
       message: "Formulario enviado",
-      id
+      id,
     });
   } catch (error) {
     console.error("Error procesando la solicitud:", error);

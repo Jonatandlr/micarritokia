@@ -1,21 +1,20 @@
-'use client'
-import React from 'react'
+"use client";
+import React from "react";
+import { useRouter } from "next/navigation";
 
 export default function page() {
-  const [state, setState] = React.useState(0)
-  const picameYox = () => {
-    //counter
-    setState(state + 1)
-  }
-
+  const [state, setState] = React.useState(0);
+  const router = useRouter();
+  const redirect = () => {
+    router.push("/dashboard");
+  };
+  redirect();
   return (
-    <main className=' h-s'>
-      <div className='flex items-center justify-center h-full'>
-        <div className='text-white text-3xl'>Hello World</div>
+    <main className=" h-s">
+      {/* loading */}
+      <div className="flex justify-center items-center h-full">
+        <div className="text-3xl">Loading...</div>
       </div>
-      <div className='text-red-400'>{state}</div>
-      <button onClick={()=>{picameYox()}}>prensame yox</button>
-      
     </main>
-  )
+  );
 }
